@@ -11,6 +11,7 @@
 		31D7DA041FFDD003004BCEAB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31D7DA021FFDD003004BCEAB /* Main.storyboard */; };
 		31D7DA061FFDD003004BCEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31D7DA051FFDD003004BCEAB /* Assets.xcassets */; };
 		31D7DA091FFDD003004BCEAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31D7DA071FFDD003004BCEAB /* LaunchScreen.storyboard */; };
+		F352E541AD483DADFD1DF492 /* Pods_IMovie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7167D0D80732F7765B50772 /* Pods_IMovie.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,9 @@
 		31D7DA051FFDD003004BCEAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		31D7DA081FFDD003004BCEAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		31D7DA0A1FFDD003004BCEAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		420CD8AEF31F078E81C3F04E /* Pods-IMovie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IMovie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IMovie/Pods-IMovie.debug.xcconfig"; sourceTree = "<group>"; };
+		94E36F598214E6A59970257D /* Pods-IMovie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IMovie.release.xcconfig"; path = "Pods/Target Support Files/Pods-IMovie/Pods-IMovie.release.xcconfig"; sourceTree = "<group>"; };
+		B7167D0D80732F7765B50772 /* Pods_IMovie.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IMovie.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F352E541AD483DADFD1DF492 /* Pods_IMovie.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +43,8 @@
 			children = (
 				31D7D9FD1FFDD003004BCEAB /* IMovie */,
 				31D7D9FC1FFDD003004BCEAB /* Products */,
+				F3510035F15F3849854B1BA4 /* Pods */,
+				C5C9F0D3F7D7152FD3690A15 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +68,23 @@
 			path = IMovie;
 			sourceTree = "<group>";
 		};
+		C5C9F0D3F7D7152FD3690A15 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B7167D0D80732F7765B50772 /* Pods_IMovie.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F3510035F15F3849854B1BA4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				420CD8AEF31F078E81C3F04E /* Pods-IMovie.debug.xcconfig */,
+				94E36F598214E6A59970257D /* Pods-IMovie.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -68,9 +92,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 31D7DA0D1FFDD003004BCEAB /* Build configuration list for PBXNativeTarget "IMovie" */;
 			buildPhases = (
+				AB1EFD5D1F6D8BDA6EFE2CC4 /* [CP] Check Pods Manifest.lock */,
 				31D7D9F71FFDD003004BCEAB /* Sources */,
 				31D7D9F81FFDD003004BCEAB /* Frameworks */,
 				31D7D9F91FFDD003004BCEAB /* Resources */,
+				5E69251C8DE574F6CC12D06F /* [CP] Embed Pods Frameworks */,
+				1EADD6B3F671731A62259E20 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -127,6 +154,74 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1EADD6B3F671731A62259E20 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-IMovie/Pods-IMovie-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5E69251C8DE574F6CC12D06F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-IMovie/Pods-IMovie-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/youtube-ios-player-helper/youtube_ios_player_helper.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/youtube_ios_player_helper.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-IMovie/Pods-IMovie-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB1EFD5D1F6D8BDA6EFE2CC4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-IMovie-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		31D7D9F71FFDD003004BCEAB /* Sources */ = {
@@ -268,6 +363,7 @@
 		};
 		31D7DA0E1FFDD003004BCEAB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 420CD8AEF31F078E81C3F04E /* Pods-IMovie.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -283,6 +379,7 @@
 		};
 		31D7DA0F1FFDD003004BCEAB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 94E36F598214E6A59970257D /* Pods-IMovie.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

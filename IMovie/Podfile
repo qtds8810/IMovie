@@ -1,0 +1,15 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '8.1'
+
+target 'IMovie' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for IMovie
+    pod 'youtube-ios-player-helper'
+    pod 'RxCocoa'
+    pod 'SnapKit'
+    pod 'Moya/RxSwift'
+    pod 'Kingfisher'
+
+end
