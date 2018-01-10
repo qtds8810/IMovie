@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        window = UIWindow.init(frame: kScreen.bounds)
+        window?.backgroundColor = kColor.white
+        
+        window?.rootViewController = RootViewController()
+        setupAppearance()
+        
+        window?.makeKeyAndVisible()
         return true
     }
 
@@ -42,5 +49,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+}
+
+private extension AppDelegate {
+    /// 外观设置
+    private func setupAppearance() {
+        window?.tintColor = kColor.tint
+        UIApplication.shared.statusBarStyle = .lightContent
+        UINavigationBar.appearance().barTintColor = kColor.main
+        UINavigationBar.appearance().tintColor = kColor.tint
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.font: kFontSize.bold_18, NSAttributedStringKey.foregroundColor: kColor.white]
+        UITabBar.appearance().barTintColor = kColor.main
+    }
 }
 
