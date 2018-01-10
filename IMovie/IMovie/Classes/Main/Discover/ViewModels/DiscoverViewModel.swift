@@ -25,7 +25,6 @@ class DiscoverViewModel {
     init() {
         // 轮播图
         NetworkTool.request(.discover, type: [DiscoverModel].self, atKeyPath: "results", success: { (models) in
-            
             if self.cycleItems.count > 0 {
                 self.cycleItems.removeAll()
             }
@@ -39,9 +38,12 @@ class DiscoverViewModel {
             
             self.reloadSubject.onNext(DiscoverViewModel.ReloadView.collection)
             
-        }) { (error) in
-            QL1(error)
-        }
+        })
+        
+        
+//        NetworkTool.request(APIManager.discover, isShowError: true, success: { (json) in
+////            QL1(json)
+//        })
         
     }
     

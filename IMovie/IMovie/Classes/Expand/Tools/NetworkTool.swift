@@ -9,22 +9,20 @@
 import Foundation
 import RxSwift
 import Moya
+import SwiftyJSON
 
 struct NetworkTool {
     
     static let moyaProvider = MoyaProvider<APIManager>()
-    static let bag = DisposeBag()
     
-    static let discoverCycleSubject = PublishSubject<[DiscoverModel]>()
-    
-    /// 整体封装请求
+    /// 整体封装请求，成功返回为 model
     ///
     /// - Parameters:
     ///   - target: 请求的接口 api enum
-    ///   - isShowError:  是否预先处理错误提示
+    ///   - isShowError:  是否预先处理错误提示【默认处理】
     ///   - type: 要转化成的 model
     ///   - keyPath: 需要往下解析的路径
-    static func request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: @escaping (MoyaError) -> Void) {
+    static func request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
         moyaProvider.request(target) { (result) in
             switch result {
             case .success(let response):
@@ -35,7 +33,7 @@ struct NetworkTool {
                     if isShowError {
                         DSProgressHUD.showMessage(message: moyaError.localizedDescription)
                     }
-                    failureCallback(moyaError)
+                    failureCallback?(moyaError)
                     return
                 }
                 
@@ -45,7 +43,7 @@ struct NetworkTool {
                     if isShowError {
                         DSProgressHUD.showMessage(message: moyaError.localizedDescription)
                     }
-                    failureCallback(moyaError)
+                    failureCallback?(moyaError)
                     return
                 }
                 /*
@@ -73,11 +71,51 @@ struct NetworkTool {
                     if isShowError {
                         DSProgressHUD.showMessage(message: moyaError.localizedDescription)
                     }
-                    failureCallback(moyaError)
+                    failureCallback?(moyaError)
                 }
                 
             case .failure(let error):
-                failureCallback(error)
+                failureCallback?(error)
+            }
+        }
+    }
+    
+    /// 整体封装请求，成功返回为 json
+    ///
+    /// - Parameters:
+    ///   - target: 请求的接口 api enum
+    ///   - isShowError: 是否预先处理错误提示【默认处理】
+    static func request(_ target: APIManager, isShowError: Bool = true, success successCallback: @escaping (JSON) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+        moyaProvider.request(target) { (result) in
+            switch result {
+            case .success(let response):
+                
+                // 失败状态码过滤
+                guard (200...299).contains(response.statusCode) else {
+                    let moyaError = MoyaError.statusCode(response)
+                    if isShowError {
+                        DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                    }
+                    failureCallback?(moyaError)
+                    return
+                }
+                
+                // 转 JSON【直接调用 Moya】
+                guard let json = try? response.mapJSON() else {
+                    let moyaError = MoyaError.jsonMapping(response)
+                    if isShowError {
+                        DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                    }
+                    failureCallback?(moyaError)
+                    return
+                }
+                
+                QL1("解析结果：\(JSON(json))")
+                
+                successCallback(JSON(json))
+                
+            case .failure(let error):
+                failureCallback?(error)
             }
         }
     }

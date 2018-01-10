@@ -8,6 +8,7 @@ target 'IMovie' do
   # Pods for IMovie
     pod 'youtube-ios-player-helper'
     pod 'Alamofire'
+    pod 'SwiftyJSON'
     pod 'RxSwift'
     pod 'RxCocoa'
     pod 'RxDataSources'
