@@ -75,6 +75,9 @@ struct NetworkTool {
                 }
                 
             case .failure(let error):
+                if isShowError {
+                    DSProgressHUD.showMessage(message: error.localizedDescription)
+                }
                 failureCallback?(error)
             }
         }
