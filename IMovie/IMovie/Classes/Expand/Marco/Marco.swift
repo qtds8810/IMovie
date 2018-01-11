@@ -121,4 +121,22 @@ struct kTitle {
     
 }
 
+// MAR: - MJRefresh刷新状态枚举
+/// MJRefresh刷新状态枚举
+///
+/// - none: 没有数据
+/// - beginHeaderRefresh:  开始头刷新
+/// - endHeaderRefresh: 结束头刷新
+/// - beginFooterRefresh: 开始尾刷新
+/// - endFooterRefresh: 结束尾刷新
+/// - noMoreData: 没有更多数据
+enum DSRefreshStatus {
+    case none
+    case beginHeaderRefresh
+    case endHeaderRefresh
+    case beginFooterRefresh
+    case endFooterRefresh
+    case noMoreData
+}
+
 

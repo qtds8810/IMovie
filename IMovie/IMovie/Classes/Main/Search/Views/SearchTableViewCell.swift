@@ -13,6 +13,10 @@ class SearchTableViewCell: UITableViewCell {
     // MARK: - Property
     static let reuseID = "SearchTableViewCellID"
     
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var rightIV: UIImageView!
+    
+    
     // MARK: - LifeCycle
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,6 +27,12 @@ class SearchTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    // MARK: - Public Method
+    func showData(model: Search_StoryModel) {
+        titleLabel.text = model.title
+        rightIV.kf.setImage(with: URL.init(string: (model.images?.count ?? 0) > 0 ? model.images!.first! : "" ))
     }
     
 }

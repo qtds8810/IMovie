@@ -12,63 +12,75 @@ import RxCocoa
 import Moya
 import Alamofire
 
-//private func endpointMapping<T: TargetType>(_ target: T) -> Endpoint<T> {
-//    QL1(("请求连接：\(target.baseURL)\(target.path) \n方法：\(target.method)\n参数：\(String(describing: target.task)) "))
-//    return MoyaProvider.defaultEndpointMapping(for: target)
-//}
-//
-//public func defaultAlamofireManager() -> Manager {
-//    
-//    let configuration = URLSessionConfiguration.default
-//    
-//    configuration.httpAdditionalHeaders = Alamofire.SessionManager.defaultHTTPHeaders
-//    
-//    let policies: [String: ServerTrustPolicy] = [
-//        "ap.grtstar.cn": .disableEvaluation
-//    ]
-//    let manager = Alamofire.SessionManager(configuration: configuration,serverTrustPolicyManager: ServerTrustPolicyManager(policies: policies))
-//    
-//    manager.startRequestsImmediately = false
-//    configuration.timeoutIntervalForResource = 30
-//    
-//    return manager
-//}
-
 class SearchViewModel: NSObject {
     // MARK: - Property
     let bag = DisposeBag()
-    var tableView: UITableView!
+    var tableView = UITableView()
     
     var modelObservable = Variable<[Search_StoryModel]>([])
     
     let requestNewData = PublishSubject<Bool>()
     var page = Int()
     
+    /// 刷新状态
+    var refreshStatus = Variable<DSRefreshStatus>(.none)
+    
     
     // MARK: - LifeCycle
-    override init() {
-        super.init()
+    func setupViewModel() {
+        tableView.rx.enableAutoDeselect().disposed(by: bag)
         
-//        modelObservable.asObservable()
-//            .bind(to: tableView.rx.items(cellIdentifier: SearchTableViewCell.reuseID, cellType: SearchTableViewCell.self)) { (row, model, cell) in
-//
-//        }
-//        .disposed(by: bag)
+        modelObservable.asObservable()
+            .bind(to: tableView.rx.items(cellIdentifier: SearchTableViewCell.reuseID, cellType: SearchTableViewCell.self)) { (row, model, cell) in
+                cell.showData(model: model)
+            }
+            .disposed(by: bag)
         
-        NetworkTool.request(.getNewsList, type: SearchModel.self, success: { (model) in
-            QL1(model)
-        }) { (error) in
-            QL1(error.localizedDescription)
-        }
+        
         
         requestNewData.subscribe(onNext: { (isNew) in
             self.page = isNew ? 0 : (self.page + 1)
             
-        }, onError: { (_) in
+            NetworkTool.request(.getNewsList, type: SearchModel.self, success: { (model) in
+                
+                if isNew {
+                    self.modelObservable.value = model.stories!
+                    self.refreshStatus.value = DSRefreshStatus.endHeaderRefresh
+                } else {
+                    self.modelObservable.value += model.stories!
+                    self.refreshStatus.value = self.page > 3 ? DSRefreshStatus.noMoreData : DSRefreshStatus.endFooterRefresh
+                }
+                
+                
+            }) { (error) in
+                QL1(error.localizedDescription)
+                if isNew {
+                    self.refreshStatus.value = DSRefreshStatus.endHeaderRefresh
+                } else {
+                    self.refreshStatus.value = DSRefreshStatus.endFooterRefresh
+                }
+            }
             
         })
-        .disposed(by: bag)
+            .disposed(by: bag)
         
+        refreshStatus.asObservable().subscribe(onNext: { (state) in
+            switch state {
+            case .none:
+                QL1("没有数据呢")
+            case .beginHeaderRefresh:
+                self.tableView.mj_header.beginRefreshing()
+            case .endHeaderRefresh:
+                self.tableView.mj_header.endRefreshing()
+            case .beginFooterRefresh:
+                self.tableView.mj_footer.beginRefreshing()
+            case .endFooterRefresh:
+                self.tableView.mj_footer.endRefreshing()
+            case .noMoreData:
+                self.tableView.mj_footer.endRefreshingWithNoMoreData()
+            }
+        })
+            .disposed(by: bag)
     }
-
+    
 }

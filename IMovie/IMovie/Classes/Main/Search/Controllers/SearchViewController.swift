@@ -7,12 +7,22 @@
 //
 
 import UIKit
+import MJRefresh
 
 class SearchViewController: UIViewController {
     
     // MARK: - Property
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: self.view.frame, style: .plain)
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        
+        let footer = UIView()
+        footer.frame.size.height = kHeight.d8
+        footer.backgroundColor = tableView.backgroundColor
+        tableView.tableFooterView = footer
+        
+        tableView.register(UINib.init(nibName: "SearchTableViewCell", bundle: nil), forCellReuseIdentifier: SearchTableViewCell.reuseID)
         
         return tableView
     }()
@@ -36,5 +46,14 @@ private extension SearchViewController {
         view.addSubview(tableView)
         
         viewModel.tableView = tableView
+        viewModel.setupViewModel()
+        
+        tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
+            self?.viewModel.requestNewData.onNext(true)
+        })
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.viewModel.requestNewData.onNext(false)
+        })
+        tableView.mj_header.beginRefreshing()
     }
 }

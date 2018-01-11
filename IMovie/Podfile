@@ -16,5 +16,6 @@ target 'IMovie' do
     pod 'SnapKit'
     pod 'Kingfisher'
     pod 'MBProgressHUD'
+    pod 'MJRefresh'
 
 end
