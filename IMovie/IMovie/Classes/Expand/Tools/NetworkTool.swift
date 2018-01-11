@@ -8,12 +8,38 @@
 
 import Foundation
 import RxSwift
+import Alamofire
 import Moya
 import SwiftyJSON
 
+/// 设置Moya请求头部信息
+private let endpointClosure = { (target: APIManager) -> Endpoint<APIManager> in
+    let defaultEndpoint = MoyaProvider.defaultEndpointMapping(for: target)
+    
+    return defaultEndpoint.adding(newHTTPHeaderFields: [
+        "APP_NAME": "MY_AWESOME_APP"
+        ])
+}
+
+/// 设置请求超时时间
+private let requestTimeoutClosure = { (endpoint: Endpoint<APIManager>, done: @escaping MoyaProvider<APIManager>.RequestResultClosure) in
+    do {
+        var request = try endpoint.urlRequest()
+        request.timeoutInterval = 30
+        QL1("设置请求超时时间：30秒")
+        done(.success(request))
+    } catch {
+        QL1("不能设置请求超时时间")
+        DSProgressHUD.showMessage(message: "请求超时设置失败，请检查代码")
+    }
+    
+}
+
 struct NetworkTool {
     
-    static let moyaProvider = MoyaProvider<APIManager>()
+    static let moyaProvider: MoyaProvider<APIManager> = MoyaProvider<APIManager>.init(endpointClosure: endpointClosure, requestClosure: requestTimeoutClosure, plugins: [kNetworkActivityPlugin])
+    
+    private init() {}
     
     /// 整体封装请求，成功返回为 model
     ///
@@ -23,51 +49,39 @@ struct NetworkTool {
     ///   - type: 要转化成的 model
     ///   - keyPath: 需要往下解析的路径
     static func request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+        QL1("\n请求链接：\(target.baseURL.debugDescription + target.path)\n请求头：\(target.headers ?? [:])\n请求参数：\(JSON(target.parameters ?? [:]))")
         moyaProvider.request(target) { (result) in
             switch result {
             case .success(let response):
                 
-                // 失败状态码过滤
-                guard (200...299).contains(response.statusCode) else {
-                    let moyaError = MoyaError.statusCode(response)
-                    if isShowError {
-                        DSProgressHUD.showMessage(message: moyaError.localizedDescription)
-                    }
-                    failureCallback?(moyaError)
-                    return
-                }
-                
-                // 转 JSON【直接调用 Moya】
-                guard let json = try? response.mapJSON() else {
-                    let moyaError = MoyaError.jsonMapping(response)
-                    if isShowError {
-                        DSProgressHUD.showMessage(message: moyaError.localizedDescription)
-                    }
-                    failureCallback?(moyaError)
-                    return
-                }
-                /*
-                 // 转 JSON【自己写】
-                 guard let json = try? JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions.mutableContainers) else {
-                 let moyaError = MoyaError.jsonMapping(response)
-                 if isShowError {
-                 DSProgressHUD.showMessage(message: moyaError.localizedDescription)
-                 }
-                 throw moyaError
-                 }
-                 */
-                #if DEBUG
-                    if let data = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted),
-                        let json = String.init(data: data, encoding: String.Encoding.utf8) {
-                        print("解析结果：\(json)")
-                    }
-                #endif
-                
                 do {
+                    let response  = try response.filterSuccessfulStatusCodes()
+                    
+                    let json = try response.mapJSON()
+                    
+                    /*
+                     // 转 JSON【自己写】
+                     guard let json = try? JSONSerialization.jsonObject(with: response.data, options: JSONSerialization.ReadingOptions.mutableContainers) else {
+                     let moyaError = MoyaError.jsonMapping(response)
+                     if isShowError {
+                     DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                     }
+                     throw moyaError
+                     }
+                     */
+                    #if DEBUG
+                        if let data = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted),
+                            let json = String.init(data: data, encoding: String.Encoding.utf8) {
+                            print("解析结果：\(json)")
+                        }
+                    #endif
+                    
                     let t = try response.map(T.self, atKeyPath: keyPath)
                     successCallback(t)
-                } catch let error {
-                    let moyaError = MoyaError.objectMapping(error, response)
+                    
+                } catch {
+                    QL1(error.localizedDescription)
+                    let moyaError = MoyaError.underlying(error, response)
                     if isShowError {
                         DSProgressHUD.showMessage(message: moyaError.localizedDescription)
                     }
@@ -89,37 +103,49 @@ struct NetworkTool {
     ///   - target: 请求的接口 api enum
     ///   - isShowError: 是否预先处理错误提示【默认处理】
     static func request(_ target: APIManager, isShowError: Bool = true, success successCallback: @escaping (JSON) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+        QL1("\n请求链接：\(target.baseURL.debugDescription + target.path)\n请求参数：\(JSON(target.parameters ?? [:]))")
+        
         moyaProvider.request(target) { (result) in
             switch result {
             case .success(let response):
                 
-                // 失败状态码过滤
-                guard (200...299).contains(response.statusCode) else {
-                    let moyaError = MoyaError.statusCode(response)
+                do {
+                    let response  = try response.filterSuccessfulStatusCodes()
+                    
+                    let json = try response.mapJSON()
+                    
+                    QL1("解析结果：\(JSON(json))")
+                    
+                    successCallback(JSON(json))
+                } catch {
+                    let moyaError = MoyaError.underlying(error, response)
                     if isShowError {
                         DSProgressHUD.showMessage(message: moyaError.localizedDescription)
                     }
                     failureCallback?(moyaError)
-                    return
                 }
-                
-                // 转 JSON【直接调用 Moya】
-                guard let json = try? response.mapJSON() else {
-                    let moyaError = MoyaError.jsonMapping(response)
-                    if isShowError {
-                        DSProgressHUD.showMessage(message: moyaError.localizedDescription)
-                    }
-                    failureCallback?(moyaError)
-                    return
-                }
-                
-                QL1("解析结果：\(JSON(json))")
-                
-                successCallback(JSON(json))
                 
             case .failure(let error):
+                if isShowError {
+                    DSProgressHUD.showMessage(message: error.localizedDescription)
+                }
                 failureCallback?(error)
             }
+        }
+    }
+    
+    static func cancelAllRequest() {
+        if #available(iOS 9.0, *) {
+            moyaProvider.manager.session.getAllTasks { (tasks) in
+                tasks.forEach { $0.cancel() }
+            }
+        } else {
+            // Fallback on earlier versions
+            moyaProvider.manager.session.getTasksWithCompletionHandler({ (dataTasks, uploadTasks, downloadTasks) in
+                dataTasks.forEach { $0.cancel() }
+                uploadTasks.forEach { $0.cancel() }
+                downloadTasks.forEach { $0.cancel() }
+            })
         }
     }
     
@@ -212,6 +238,14 @@ extension Observable {
                 DSProgressHUD.showMessage(message: error.localizedDescription)
             }
             throw moyaError
+        })
+    }
+    
+    func showErrorToast() -> Observable<Element> {
+        return self.do(onNext: { (element) in
+            
+        }, onError: { (error) in
+            UIAlertController.show(message: error.localizedDescription)
         })
     }
     

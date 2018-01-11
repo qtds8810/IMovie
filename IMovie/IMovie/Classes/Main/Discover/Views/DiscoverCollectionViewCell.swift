@@ -27,7 +27,7 @@ class DiscoverCollectionViewCell: UICollectionViewCell {
     // MARK: - Public Method
     func showData(model: DiscoverModel) -> Void {
         imageView.kf.setImage(with: ImageURLTool.standardImage(path: model.backdrop_path, type: .backdrop), placeholder: nil, options: nil, progressBlock: nil) { (image, error, _, url) in
-            print(image ?? "", error ?? "成功加载", url ?? "")
+//            print(image ?? "", error ?? "成功加载", url ?? "")
         }
         nameLabel.text = model.title
     }

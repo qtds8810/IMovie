@@ -15,7 +15,7 @@ import Moya
 class DiscoverViewController: UIViewController {
     // MARK: - Property
     private let bag = DisposeBag()
-    private let viewModel = DiscoverViewModel()
+    private lazy var viewModel = DiscoverViewModel()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: self.view.bounds, style: UITableViewStyle.grouped)

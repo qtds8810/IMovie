@@ -24,7 +24,7 @@ class DiscoverViewModel {
     
     init() {
         // 轮播图
-        NetworkTool.request(.discover, type: [DiscoverModel].self, atKeyPath: "results", success: { (models) in
+        NetworkTool.request(.discover, isShowError: true, type: [DiscoverModel].self, atKeyPath: "results", success: { (models) in
             if self.cycleItems.count > 0 {
                 self.cycleItems.removeAll()
             }

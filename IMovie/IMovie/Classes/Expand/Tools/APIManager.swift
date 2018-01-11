@@ -12,9 +12,9 @@ import Moya
 enum APIManager {
     /// 发现控制器
     case discover
-    /// 我的 - 获取新闻
+    /// 搜索 - 获取新闻
     case getNewsList
-    /// 我的 - 获取更多新闻
+    /// 搜索 - 获取更多新闻
     case getMoreNews(String)
 }
 
