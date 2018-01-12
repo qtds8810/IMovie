@@ -30,7 +30,7 @@ private let requestTimeoutClosure = { (endpoint: Endpoint<APIManager>, done: @es
         done(.success(request))
     } catch {
         QL1("不能设置请求超时时间")
-        DSProgressHUD.showMessage(message: "请求超时设置失败，请检查代码")
+        DSProgressHUD.show(.success(message: "请求超时设置失败，请检查代码"))
     }
     
 }
@@ -75,7 +75,6 @@ struct NetworkTool {
                             print("解析结果：\(json)")
                         }
                     #endif
-                    
                     let t = try response.map(T.self, atKeyPath: keyPath)
                     successCallback(t)
                     
@@ -83,14 +82,14 @@ struct NetworkTool {
                     QL1(error.localizedDescription)
                     let moyaError = MoyaError.underlying(error, response)
                     if isShowError {
-                        DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                        DSProgressHUD.show(.error(message: moyaError.localizedDescription))
                     }
                     failureCallback?(moyaError)
                 }
                 
             case .failure(let error):
                 if isShowError {
-                    DSProgressHUD.showMessage(message: error.localizedDescription)
+                    DSProgressHUD.show(.error(message: error.localizedDescription))
                 }
                 failureCallback?(error)
             }
@@ -120,14 +119,14 @@ struct NetworkTool {
                 } catch {
                     let moyaError = MoyaError.underlying(error, response)
                     if isShowError {
-                        DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                        DSProgressHUD.show(.error(message: moyaError.localizedDescription))
                     }
                     failureCallback?(moyaError)
                 }
                 
             case .failure(let error):
                 if isShowError {
-                    DSProgressHUD.showMessage(message: error.localizedDescription)
+                    DSProgressHUD.show(.error(message: error.localizedDescription))
                 }
                 failureCallback?(error)
             }
@@ -188,7 +187,7 @@ extension Observable {
             guard let response = res as? Moya.Response else {
                 let moyaError = MoyaError.requestMapping("无响应")
                 if isShowError {
-                    DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                    DSProgressHUD.show(.error(message: moyaError.localizedDescription))
                 }
                 throw moyaError
             }
@@ -197,7 +196,7 @@ extension Observable {
             guard (200...299).contains(response.statusCode) else {
                 let moyaError = MoyaError.statusCode(response)
                 if isShowError {
-                    DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                    DSProgressHUD.show(.error(message: moyaError.localizedDescription))
                 }
                 throw moyaError
             }
@@ -206,7 +205,7 @@ extension Observable {
             guard let json = try? response.mapJSON() else {
                 let moyaError = MoyaError.jsonMapping(response)
                 if isShowError {
-                    DSProgressHUD.showMessage(message: moyaError.localizedDescription)
+                    DSProgressHUD.show(.error(message: moyaError.localizedDescription))
                 }
                 throw moyaError
             }
@@ -235,7 +234,7 @@ extension Observable {
         }).catchError({ (error) in
             let moyaError = MoyaError.requestMapping(error.localizedDescription)
             if isShowError {
-                DSProgressHUD.showMessage(message: error.localizedDescription)
+                DSProgressHUD.show(.error(message: error.localizedDescription))
             }
             throw moyaError
         })

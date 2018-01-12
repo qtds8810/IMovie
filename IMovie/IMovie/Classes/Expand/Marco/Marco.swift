@@ -37,6 +37,7 @@ struct kHeight {
     static let d8: CGFloat = 8
     static let d15: CGFloat = 15
     static let d50: CGFloat = 50
+    static let d44: CGFloat = 44
     static let d49: CGFloat = 49
     static let d64: CGFloat = 64
 }

@@ -29,7 +29,7 @@ private extension RootViewController {
         vc.tabBarItem = UITabBarItem.init(title: title, image: image, selectedImage: selectedImage)
         vc.title = title
         
-        let nav = UINavigationController(rootViewController: vc)
+        let nav = BaseNavigationController(rootViewController: vc)
         addChildViewController(nav)
     }
 }

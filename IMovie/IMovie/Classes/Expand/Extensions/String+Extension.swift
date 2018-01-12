@@ -62,9 +62,10 @@ extension String {
      }
      */
     /// URL中文转码：encodeURIComponent编码方式,会对特殊符号编码；
-    func urlEncodeWithSpecialCharacter() -> CFString {
+    func urlEncodeWithSpecialCharacter() -> String {
         /// 方法一
-        return self.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)! as CFString
+        return addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? ""
+        
         /// 方法二
         //        return CFURLCreateStringByAddingPercentEscapes(nil, self, nil, "!*'();:@&=+$,/?%#[]", CFStringBuiltInEncodings.UTF8.rawValue)
     }

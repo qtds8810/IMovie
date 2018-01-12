@@ -44,6 +44,9 @@
 		31D7DAFC1FFE265B004BCEAB /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7DAFB1FFE265B004BCEAB /* Helper.swift */; };
 		31D7DAFF1FFE32FC004BCEAB /* DiscoverCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7DAFD1FFE32FC004BCEAB /* DiscoverCollectionViewCell.swift */; };
 		31D7DB001FFE32FC004BCEAB /* DiscoverCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31D7DAFE1FFE32FC004BCEAB /* DiscoverCollectionViewCell.xib */; };
+		31E036D02008551D00DD8E1B /* SearchDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E036CF2008551D00DD8E1B /* SearchDetailViewController.swift */; };
+		31E036D2200855CF00DD8E1B /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E036D1200855CF00DD8E1B /* BaseNavigationController.swift */; };
+		31E036D4200856E100DD8E1B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E036D3200856E100DD8E1B /* BaseViewController.swift */; };
 		F352E541AD483DADFD1DF492 /* Pods_IMovie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7167D0D80732F7765B50772 /* Pods_IMovie.framework */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +91,9 @@
 		31D7DAFB1FFE265B004BCEAB /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		31D7DAFD1FFE32FC004BCEAB /* DiscoverCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverCollectionViewCell.swift; sourceTree = "<group>"; };
 		31D7DAFE1FFE32FC004BCEAB /* DiscoverCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DiscoverCollectionViewCell.xib; sourceTree = "<group>"; };
+		31E036CF2008551D00DD8E1B /* SearchDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailViewController.swift; sourceTree = "<group>"; };
+		31E036D1200855CF00DD8E1B /* BaseNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
+		31E036D3200856E100DD8E1B /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		420CD8AEF31F078E81C3F04E /* Pods-IMovie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IMovie.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IMovie/Pods-IMovie.debug.xcconfig"; sourceTree = "<group>"; };
 		94E36F598214E6A59970257D /* Pods-IMovie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IMovie.release.xcconfig"; path = "Pods/Target Support Files/Pods-IMovie/Pods-IMovie.release.xcconfig"; sourceTree = "<group>"; };
 		B7167D0D80732F7765B50772 /* Pods_IMovie.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IMovie.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,6 +227,8 @@
 			isa = PBXGroup;
 			children = (
 				31D7DAB61FFDF881004BCEAB /* RootViewController.swift */,
+				31E036D1200855CF00DD8E1B /* BaseNavigationController.swift */,
+				31E036D3200856E100DD8E1B /* BaseViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -303,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				31D7DACE1FFDFD73004BCEAB /* SearchViewController.swift */,
+				31E036CF2008551D00DD8E1B /* SearchDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -547,6 +556,7 @@
 				31D7DAB71FFDF881004BCEAB /* RootViewController.swift in Sources */,
 				31631BB920060EF1001161ED /* SearchModel.swift in Sources */,
 				31D7DAD31FFE017B004BCEAB /* String+Extension.swift in Sources */,
+				31E036D4200856E100DD8E1B /* BaseViewController.swift in Sources */,
 				31D7DACF1FFDFD73004BCEAB /* SearchViewController.swift in Sources */,
 				31D7DA1A1FFDDEDD004BCEAB /* UIColor+Extension.swift in Sources */,
 				31D7DAF61FFE1E60004BCEAB /* DiscoverModel.swift in Sources */,
@@ -556,6 +566,7 @@
 				31D7DAFA1FFE22D4004BCEAB /* NetworkTool.swift in Sources */,
 				31D7DAEC1FFE124A004BCEAB /* DSProgressHUD+Extension.swift in Sources */,
 				31D7DAF41FFE16B1004BCEAB /* DiscoverViewModel.swift in Sources */,
+				31E036D2200855CF00DD8E1B /* BaseNavigationController.swift in Sources */,
 				316CC05F2006F6DA00784EFE /* DSRequestPlugin.swift in Sources */,
 				31D7DAFF1FFE32FC004BCEAB /* DiscoverCollectionViewCell.swift in Sources */,
 				31D7DAE81FFE111B004BCEAB /* AutoDeselect+Rx.swift in Sources */,
@@ -567,6 +578,7 @@
 				31D7DADC1FFE0D14004BCEAB /* DiscoverTableViewCell.swift in Sources */,
 				31B0B2C61FFF0B6F00B2DA28 /* APIManager.swift in Sources */,
 				31D7DAEA1FFE111B004BCEAB /* UIButton+Rx.swift in Sources */,
+				31E036D02008551D00DD8E1B /* SearchDetailViewController.swift in Sources */,
 				31D7DAD51FFE08E2004BCEAB /* String+MD5.swift in Sources */,
 				31D7DA1C1FFDE0A8004BCEAB /* UIFont+Extension.swift in Sources */,
 				31D7DAEE1FFE12D0004BCEAB /* UIAlertController+Extension.swift in Sources */,

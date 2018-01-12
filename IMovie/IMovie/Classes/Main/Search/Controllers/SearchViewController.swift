@@ -8,6 +8,7 @@
 
 import UIKit
 import MJRefresh
+import RxSwift
 
 class SearchViewController: UIViewController {
     
@@ -28,6 +29,7 @@ class SearchViewController: UIViewController {
     }()
     
     private lazy var viewModel = SearchViewModel()
+    private let bag = DisposeBag()
     
     // MARK: - View LifeCycle
     override func viewDidLoad() {
@@ -55,5 +57,21 @@ private extension SearchViewController {
             self?.viewModel.requestNewData.onNext(false)
         })
         tableView.mj_header.beginRefreshing()
+        
+        // tableView Action
+        tableView.rx.itemSelected
+            .subscribe(onNext: { (indexPath) in
+                QL1(indexPath.row)
+            })
+        .disposed(by: bag)
+        
+        tableView.rx.modelSelected(Search_StoryModel.self)
+            .subscribe(onNext: { [weak self] (model) in
+                QL1(model.title)
+                let detailVC = SearchDetailViewController()
+                detailVC.title = model.id?.description
+                self?.navigationController?.pushViewController(detailVC, animated: true)
+            })
+        .disposed(by: bag)
     }
 }
