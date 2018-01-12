@@ -13,14 +13,8 @@ import Moya
 let kNetworkActivityPlugin = NetworkActivityPlugin { (state, target)  -> Void  in
     switch state {
     case .began:
-//        DSProgressHUD.showMessage(message: "正在加载")
-        QL1("正在加载……")
-//        DSProgressHUD.show(message: "正在加载……", toView: global_getTopViewController()!.view)
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
     case .ended:
-//        DSProgressHUD.showMessage(message: "加载完成")
-        QL1("加载完成")
-//        DSProgressHUD.show(success: "加载完成")
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }

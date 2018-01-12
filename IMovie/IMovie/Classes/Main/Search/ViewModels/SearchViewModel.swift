@@ -19,7 +19,7 @@ class SearchViewModel: NSObject {
     
     var modelObservable = Variable<[Search_StoryModel]>([])
     
-    let requestNewData = PublishSubject<Bool>()
+    let requestCommand = PublishSubject<Bool>()
     var page = Int()
     
     /// 刷新状态
@@ -38,8 +38,30 @@ class SearchViewModel: NSObject {
         
         
         
-        requestNewData.subscribe(onNext: { (isNew) in
+        requestCommand.subscribe(onNext: { (isNew) in
             self.page = isNew ? 0 : (self.page + 1)
+            /*
+            NetworkTool.moyaProvider.rx.request(.getNewsList).asObservable()
+                .ds_map(SearchModel.self, isShowError: true, atKeyPath: nil)
+                .subscribe(onNext: { (model) in
+                    
+                    if isNew {
+                        self.modelObservable.value = model.stories!
+                        self.refreshStatus.value = DSRefreshStatus.endHeaderRefresh
+                    } else {
+                        self.modelObservable.value += model.stories!
+                        self.refreshStatus.value = self.page > 3 ? DSRefreshStatus.noMoreData : DSRefreshStatus.endFooterRefresh
+                    }
+                }, onError: { (error) in
+                    QL1(error.localizedDescription)
+                    if isNew {
+                        self.refreshStatus.value = DSRefreshStatus.endHeaderRefresh
+                    } else {
+                        self.refreshStatus.value = DSRefreshStatus.endFooterRefresh
+                    }
+                })
+                .disposed(by: self.bag)
+            */
             
             NetworkTool.request(.getNewsList, type: SearchModel.self, success: { (model) in
                 
@@ -67,7 +89,7 @@ class SearchViewModel: NSObject {
         refreshStatus.asObservable().subscribe(onNext: { (state) in
             switch state {
             case .none:
-                QL1("没有数据呢")
+                break
             case .beginHeaderRefresh:
                 self.tableView.mj_header.beginRefreshing()
             case .endHeaderRefresh:

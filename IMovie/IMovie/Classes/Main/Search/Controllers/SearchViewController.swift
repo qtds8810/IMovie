@@ -58,10 +58,10 @@ private extension SearchViewController {
         viewModel.setupViewModel()
         
         tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
-            self?.viewModel.requestNewData.onNext(true)
+            self?.viewModel.requestCommand.onNext(true)
         })
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.viewModel.requestNewData.onNext(false)
+            self?.viewModel.requestCommand.onNext(false)
         })
         tableView.mj_header.beginRefreshing()
         
