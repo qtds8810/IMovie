@@ -72,6 +72,7 @@ class SearchViewModel: NSObject {
                 self.tableView.mj_header.beginRefreshing()
             case .endHeaderRefresh:
                 self.tableView.mj_header.endRefreshing()
+                self.tableView.mj_footer.resetNoMoreData()
             case .beginFooterRefresh:
                 self.tableView.mj_footer.beginRefreshing()
             case .endFooterRefresh:
