@@ -32,10 +32,17 @@ class SearchViewController: UIViewController {
     private let bag = DisposeBag()
     
     // MARK: - View LifeCycle
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        ds_setNavbar(barColor: kColor.main, shadowColor: nil, left_rightColor: kColor.brown, centerColor: kColor.brown, statusBarStyle: .default)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
+        
     }
     
 }
