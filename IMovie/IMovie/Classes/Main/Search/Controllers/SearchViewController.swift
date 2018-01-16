@@ -30,6 +30,7 @@ class SearchViewController: UIViewController {
     private lazy var viewModel = SearchViewModel()
     private let bag = DisposeBag()
     
+    
     // MARK: - View LifeCycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -52,7 +53,7 @@ private extension SearchViewController {
         view.addSubview(tableView)
         
         // 初始化 viewmodel
-        viewModel.setupViewModel(with: tableView)
+        viewModel.setupViewModel(with: tableView, navigationItem: navigationItem)
         
         
         // tableView Action
@@ -70,5 +71,7 @@ private extension SearchViewController {
                 self?.navigationController?.pushViewController(detailVC, animated: true)
             })
         .disposed(by: bag)
+        
+        
     }
 }

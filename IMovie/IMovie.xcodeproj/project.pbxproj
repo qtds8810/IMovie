@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		31631BB720060E4C001161ED /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631BB620060E4C001161ED /* SearchViewModel.swift */; };
-		31631BB920060EF1001161ED /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631BB820060EF1001161ED /* SearchModel.swift */; };
 		31631BBC20061059001161ED /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631BBA20061059001161ED /* SearchTableViewCell.swift */; };
 		31631BBD20061059001161ED /* SearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31631BBB20061059001161ED /* SearchTableViewCell.xib */; };
 		316CC05F2006F6DA00784EFE /* DSRequestPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316CC05E2006F6DA00784EFE /* DSRequestPlugin.swift */; };
 		31B0B2C61FFF0B6F00B2DA28 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B0B2C51FFF0B6F00B2DA28 /* APIManager.swift */; };
 		31B0B2CA1FFF2CFF00B2DA28 /* ImageURLTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B0B2C91FFF2CFF00B2DA28 /* ImageURLTool.swift */; };
+		31D2EABD200DE64B00E8475B /* MineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D2EABC200DE64B00E8475B /* MineViewModel.swift */; };
+		31D2EAC1200DE7A800E8475B /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D2EAC0200DE7A700E8475B /* SearchModel.swift */; };
+		31D2EAC3200DF34E00E8475B /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D2EAC2200DF34E00E8475B /* Date+Extensions.swift */; };
 		31D7D9FF1FFDD003004BCEAB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D9FE1FFDD003004BCEAB /* AppDelegate.swift */; };
 		31D7DA061FFDD003004BCEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31D7DA051FFDD003004BCEAB /* Assets.xcassets */; };
 		31D7DA091FFDD003004BCEAB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 31D7DA071FFDD003004BCEAB /* LaunchScreen.storyboard */; };
@@ -52,12 +54,14 @@
 
 /* Begin PBXFileReference section */
 		31631BB620060E4C001161ED /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
-		31631BB820060EF1001161ED /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		31631BBA20061059001161ED /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		31631BBB20061059001161ED /* SearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchTableViewCell.xib; sourceTree = "<group>"; };
 		316CC05E2006F6DA00784EFE /* DSRequestPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSRequestPlugin.swift; sourceTree = "<group>"; };
 		31B0B2C51FFF0B6F00B2DA28 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		31B0B2C91FFF2CFF00B2DA28 /* ImageURLTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLTool.swift; sourceTree = "<group>"; };
+		31D2EABC200DE64B00E8475B /* MineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineViewModel.swift; sourceTree = "<group>"; };
+		31D2EAC0200DE7A700E8475B /* SearchModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
+		31D2EAC2200DF34E00E8475B /* Date+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		31D7D9FB1FFDD003004BCEAB /* IMovie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IMovie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D7D9FE1FFDD003004BCEAB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		31D7DA051FFDD003004BCEAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -194,6 +198,7 @@
 			children = (
 				31D7DADE1FFE1103004BCEAB /* RxExtensions */,
 				31D7DA191FFDDEDD004BCEAB /* UIColor+Extension.swift */,
+				31D2EAC2200DF34E00E8475B /* Date+Extensions.swift */,
 				31D7DA1B1FFDE0A8004BCEAB /* UIFont+Extension.swift */,
 				31D7DAD21FFE017B004BCEAB /* String+Extension.swift */,
 				31D7DAD41FFE08E2004BCEAB /* String+MD5.swift */,
@@ -302,7 +307,7 @@
 		31D7DAC41FFDFC9C004BCEAB /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				31631BB820060EF1001161ED /* SearchModel.swift */,
+				31D2EAC0200DE7A700E8475B /* SearchModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -339,6 +344,7 @@
 		31D7DAC81FFDFC9D004BCEAB /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				31D2EABC200DE64B00E8475B /* MineViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -554,7 +560,6 @@
 				31D7DAE71FFE111B004BCEAB /* UILabel+Rx.swift in Sources */,
 				31D7DAE91FFE111B004BCEAB /* UIControl+Rx.swift in Sources */,
 				31D7DAB71FFDF881004BCEAB /* RootViewController.swift in Sources */,
-				31631BB920060EF1001161ED /* SearchModel.swift in Sources */,
 				31D7DAD31FFE017B004BCEAB /* String+Extension.swift in Sources */,
 				31E036D4200856E100DD8E1B /* BaseViewController.swift in Sources */,
 				31D7DACF1FFDFD73004BCEAB /* SearchViewController.swift in Sources */,
@@ -563,13 +568,16 @@
 				31D7DAD11FFDFD80004BCEAB /* MineViewController.swift in Sources */,
 				31D7DAF01FFE130C004BCEAB /* UIImage+Extension.swift in Sources */,
 				31B0B2CA1FFF2CFF00B2DA28 /* ImageURLTool.swift in Sources */,
+				31D2EAC1200DE7A800E8475B /* SearchModel.swift in Sources */,
 				31D7DAFA1FFE22D4004BCEAB /* NetworkTool.swift in Sources */,
 				31D7DAEC1FFE124A004BCEAB /* DSProgressHUD+Extension.swift in Sources */,
 				31D7DAF41FFE16B1004BCEAB /* DiscoverViewModel.swift in Sources */,
+				31D2EABD200DE64B00E8475B /* MineViewModel.swift in Sources */,
 				31E036D2200855CF00DD8E1B /* BaseNavigationController.swift in Sources */,
 				316CC05F2006F6DA00784EFE /* DSRequestPlugin.swift in Sources */,
 				31D7DAFF1FFE32FC004BCEAB /* DiscoverCollectionViewCell.swift in Sources */,
 				31D7DAE81FFE111B004BCEAB /* AutoDeselect+Rx.swift in Sources */,
+				31D2EAC3200DF34E00E8475B /* Date+Extensions.swift in Sources */,
 				31D7DAF21FFE143D004BCEAB /* MultiplyCellModel.swift in Sources */,
 				31D7DAE51FFE111B004BCEAB /* Operators+Rx.swift in Sources */,
 				31D7DA181FFDDC83004BCEAB /* Marco.swift in Sources */,

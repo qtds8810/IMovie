@@ -18,14 +18,14 @@ class SearchViewModel: NSObject {
     var modelObservable = Variable<[Search_StoryModel]>([])
     
     let requestCommand = PublishSubject<Bool>()
-    var page = Int()
+    var page: Int = 0
     
     /// 刷新状态
     var refreshStatus = Variable<DSRefreshStatus>(.none)
-    
+    var newsDate = ""
     
     // MARK: - LifeCycle
-    func setupViewModel(with tableView: UITableView) {
+    func setupViewModel(with tableView: UITableView, navigationItem: UINavigationItem) {
         tableView.rx.enableAutoDeselect().disposed(by: bag)
         
         modelObservable.asObservable()
@@ -36,7 +36,7 @@ class SearchViewModel: NSObject {
         
         
         
-        requestCommand.subscribe(onNext: { (isNew) in
+        requestCommand.subscribe(onNext: { [unowned self] (isNew) in
             self.page = isNew ? 0 : (self.page + 1)
             /*
             NetworkTool.moyaProvider.rx.request(.getNewsList).asObservable()
@@ -61,22 +61,27 @@ class SearchViewModel: NSObject {
                 .disposed(by: self.bag)
             */
             
-            NetworkTool.request(.getNewsList, type: SearchModel.self, success: { (model) in
-                
-                if isNew {
+            if isNew { // 下拉刷新
+                NetworkTool.request(.getNewsList, type: SearchModel.self, success: { (model) in
+                    self.newsDate = model.date ?? ""
+                    navigationItem.title = "今日要闻"
                     self.modelObservable.value = model.stories!
                     self.refreshStatus.value = DSRefreshStatus.endHeaderRefresh
-                } else {
-                    self.modelObservable.value += model.stories!
-                    self.refreshStatus.value = self.page > 3 ? DSRefreshStatus.noMoreData : DSRefreshStatus.endFooterRefresh
+                    
+                }) { (error) in
+                    self.refreshStatus.value = DSRefreshStatus.endHeaderRefresh
                 }
                 
-                
-            }) { (error) in
-                QL1(error.localizedDescription)
-                if isNew {
-                    self.refreshStatus.value = DSRefreshStatus.endHeaderRefresh
-                } else {
+            } else { // 上拉加载更多
+                NetworkTool.request(.getMoreNews(self.newsDate), type: SearchModel.self, success: { (model) in
+                    self.newsDate = model.date ?? ""
+                    navigationItem.title = self.dateStrToNewDateStr(old: model.date ?? "")//model.date
+                    self.modelObservable.value += model.stories!
+                    // TODO: - 测试，暂时用
+                    self.refreshStatus.value = self.page > 10 ? DSRefreshStatus.noMoreData : DSRefreshStatus.endFooterRefresh
+//                    self.refreshStatus.value = DSRefreshStatus.endFooterRefresh
+                    
+                }) { (error) in
                     self.refreshStatus.value = DSRefreshStatus.endFooterRefresh
                 }
             }
@@ -106,11 +111,17 @@ class SearchViewModel: NSObject {
         tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
             self?.requestCommand.onNext(true)
         })
-        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.requestCommand.onNext(false)
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [unowned self] in
+            self.requestCommand.onNext(false)
         })
         
         tableView.mj_header.beginRefreshing()
+        
+    }
+    
+    private func dateStrToNewDateStr(old oldDateStr: String) -> String {
+        let date = Date.ds_StringToDate(dateStr:  oldDateStr, format: "yyyyMMdd")
+        return Date.ds_dateToString(delta: date?.timeIntervalSinceNow ?? TimeInterval(), format: "yyyy年MM月dd日")
     }
     
 }
