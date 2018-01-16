@@ -16,6 +16,8 @@ enum APIManager {
     case getNewsList
     /// 搜索 - 获取更多新闻
     case getMoreNews(String)
+    
+    
 }
 
 // MARK: - TargetType

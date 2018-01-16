@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MJRefresh
 import RxSwift
 
 class SearchViewController: UIViewController {
@@ -50,20 +49,11 @@ class SearchViewController: UIViewController {
 // MARK: - Private Method
 private extension SearchViewController {
     private func setupUI() {
-        view.backgroundColor = UIColor.brown
-        
         view.addSubview(tableView)
         
-        viewModel.tableView = tableView
-        viewModel.setupViewModel()
+        // 初始化 viewmodel
+        viewModel.setupViewModel(with: tableView)
         
-        tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
-            self?.viewModel.requestCommand.onNext(true)
-        })
-        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-            self?.viewModel.requestCommand.onNext(false)
-        })
-        tableView.mj_header.beginRefreshing()
         
         // tableView Action
         tableView.rx.itemSelected

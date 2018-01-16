@@ -9,13 +9,11 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import Moya
-import Alamofire
+import MJRefresh
 
 class SearchViewModel: NSObject {
     // MARK: - Property
     let bag = DisposeBag()
-    var tableView = UITableView()
     
     var modelObservable = Variable<[Search_StoryModel]>([])
     
@@ -27,7 +25,7 @@ class SearchViewModel: NSObject {
     
     
     // MARK: - LifeCycle
-    func setupViewModel() {
+    func setupViewModel(with tableView: UITableView) {
         tableView.rx.enableAutoDeselect().disposed(by: bag)
         
         modelObservable.asObservable()
@@ -91,19 +89,28 @@ class SearchViewModel: NSObject {
             case .none:
                 break
             case .beginHeaderRefresh:
-                self.tableView.mj_header.beginRefreshing()
+                tableView.mj_header.beginRefreshing()
             case .endHeaderRefresh:
-                self.tableView.mj_header.endRefreshing()
-                self.tableView.mj_footer.resetNoMoreData()
+                tableView.mj_header.endRefreshing()
+                tableView.mj_footer.resetNoMoreData()
             case .beginFooterRefresh:
-                self.tableView.mj_footer.beginRefreshing()
+                tableView.mj_footer.beginRefreshing()
             case .endFooterRefresh:
-                self.tableView.mj_footer.endRefreshing()
+                tableView.mj_footer.endRefreshing()
             case .noMoreData:
-                self.tableView.mj_footer.endRefreshingWithNoMoreData()
+                tableView.mj_footer.endRefreshingWithNoMoreData()
             }
         })
             .disposed(by: bag)
+        
+        tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
+            self?.requestCommand.onNext(true)
+        })
+        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+            self?.requestCommand.onNext(false)
+        })
+        
+        tableView.mj_header.beginRefreshing()
     }
     
 }
