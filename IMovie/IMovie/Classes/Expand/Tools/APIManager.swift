@@ -16,7 +16,7 @@ enum APIManager {
     case getNewsList
     /// 搜索 - 获取更多新闻
     case getMoreNews(String)
-    
+
     
 }
 
@@ -44,8 +44,6 @@ extension APIManager: TargetType {
     
     var method: Moya.Method {
         switch self {
-//        case .discover:
-//            return .get
         default:
             return .get
         }
@@ -70,7 +68,11 @@ extension APIManager: TargetType {
 //        case .getNewsList, .getMoreNews(_):
 //            return nil
         default:
-            return ["Content-type": "application/json"]
+            return [
+                // 备注：Content-typ和 urlEncoding 参数有冲突，需要注销
+//                "Content-type": "application/json",
+                    "Token": "xxxxx",
+                "Timestamp": "1516238972"]
         }
     }
     

@@ -12,86 +12,98 @@ import Alamofire
 import Moya
 import SwiftyJSON
 
-/// 设置Moya请求头部信息
-private let endpointClosure = { (target: APIManager) -> Endpoint<APIManager> in
-    let defaultEndpoint = MoyaProvider.defaultEndpointMapping(for: target)
-    
-    return defaultEndpoint.adding(newHTTPHeaderFields: [
-        "APP_NAME": "MY_AWESOME_APP"
-        ])
-}
 
 /// 设置请求超时时间
 private let requestTimeoutClosure = { (endpoint: Endpoint<APIManager>, done: @escaping MoyaProvider<APIManager>.RequestResultClosure) in
     do {
         var request = try endpoint.urlRequest()
         request.timeoutInterval = 30
-        QL1("设置请求超时时间：30秒")
+//        QL1("设置请求超时时间：30秒")
         done(.success(request))
     } catch {
-        QL1("不能设置请求超时时间")
-        DSProgressHUD.show(.success(message: "请求超时设置失败，请检查代码"))
+        QL1("不能设置请求超时时间，原因：\(error)")
     }
     
 }
 
 struct NetworkTool {
     
-    static let moyaProvider: MoyaProvider<APIManager> = MoyaProvider<APIManager>.init(endpointClosure: endpointClosure, requestClosure: requestTimeoutClosure, plugins: [kNetworkActivityPlugin])
+    static let moyaProvider: MoyaProvider<APIManager> = MoyaProvider<APIManager>.init(requestClosure: requestTimeoutClosure, plugins: [kNetworkActivityPlugin])
     
     private init() {}
     
-    /// 整体封装请求，成功返回为 model
+    
+    /// 整体封装请求，成功后返回对应的 model
     ///
     /// - Parameters:
-    ///   - target: 请求的接口 api enum
-    ///   - isShowError:  是否预先处理错误提示【默认处理】
+    ///   - target: 请求接口、参数
+    ///   - isShowError:  是否预先处理错误提示（默认展示）
+    ///   - isCache: 是否缓存成功的数据（默认不缓存）
     ///   - type: 要转化成的 model
     ///   - keyPath: 需要往下解析的路径
-    static func request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
-        QL1("\n请求链接：\(target.baseURL.debugDescription + target.path)\n请求头：\(target.headers ?? [:])\n请求参数：\(JSON(target.parameters ?? [:]))")
+    static func request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
         
-        moyaProvider.request(target) { (result) in
-            switch result {
-            case .success(let response):
-                
-                do {
-                    let response  = try response.filterSuccessfulStatusCodes()
-                    let json = try response.mapJSON()
-                    
-                    #if DEBUG
-                        if let data = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted),
-                            let json = String.init(data: data, encoding: String.Encoding.utf8) {
-                            print("解析结果：\(json)")
-                        }
-                    #endif
-                    let t = try response.map(T.self, atKeyPath: keyPath)
-                    successCallback(t)
-                    
-                } catch {
-                    let moyaError = (error as! MoyaError)
+        loadData(target, isShowError: isShowError, isCache: isCache, success: { (response) in
+            do {
+                let t = try response.map(T.self, atKeyPath: keyPath)
+                successCallback(t)
+            } catch {
+                if let moyaError = error as? MoyaError {
                     if isShowError {
                         DSProgressHUD.show(.error(message: moyaError.myErrorDescription))
                     }
                     failureCallback?(moyaError)
+                } else {
+                    failureCallback?(MoyaError.underlying(error, response))
                 }
                 
-            case .failure(let error):
-                if isShowError {
-                    DSProgressHUD.show(.error(message: error.myErrorDescription))
-                }
-                failureCallback?(error)
             }
-        }
+        }, failure: failureCallback)
+        
     }
     
     /// 整体封装请求，成功返回为 json
     ///
     /// - Parameters:
-    ///   - target: 请求的接口 api enum
-    ///   - isShowError: 是否预先处理错误提示【默认处理】
-    static func request(_ target: APIManager, isShowError: Bool = true, success successCallback: @escaping (JSON) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
-        QL1("\n请求链接：\(target.baseURL.debugDescription + target.path)\n请求参数：\(JSON(target.parameters ?? [:]))")
+    ///   - target: 请求接口、参数
+    ///   - isShowError: 是否预先处理错误提示（默认展示）
+    ///   - isCache: 是否缓存成功的数据（默认不缓存）
+    static func request(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, success successCallback: @escaping (JSON) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+        
+        loadData(target, isShowError: isShowError, isCache: isCache, success: { (response) in
+            do {
+                let json = try response.mapJSON()
+                successCallback(JSON(json))
+            } catch {
+                if let moyaError = error as? MoyaError {
+                    if isShowError {
+                        DSProgressHUD.show(.error(message: moyaError.myErrorDescription))
+                    }
+                    failureCallback?(moyaError)
+                } else {
+                    failureCallback?(MoyaError.underlying(error, response))
+                }
+            }
+        }, failure: failureCallback)
+        
+    }
+    
+    /// 所有的请求调用
+    ///
+    /// - Parameters:
+    ///   - target: 接口路径、参数
+    ///   - isShowError: 是否展示请求错误的弹框（默认展示）
+    ///   - isCache: 是否缓存到本地，（默认不缓存）
+    private static func loadData(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, success successCallback: @escaping (Response) -> Void, failure failureCallback: ((MoyaError) -> Void)?) {
+        
+        QL1("\n请求方法：\(target.method)\n请求链接：\(target.baseURL.debugDescription + target.path)\n请求头：\(target.headers ?? [:])\n请求参数：\(target.parameters ?? [:])")
+        
+        // 判断是否加载本地缓存，能否成功加载
+        if isCache, let data = DSSaveFiles.read(path: target.path) {
+            QL1("加载缓存数据---")
+            successCallback(Response.init(statusCode: 200, data: data))
+            return
+        }
         
         moyaProvider.request(target) { (result) in
             switch result {
@@ -99,18 +111,29 @@ struct NetworkTool {
                 
                 do {
                     let response  = try response.filterSuccessfulStatusCodes()
-                    
-                    let json = try response.mapJSON()
-                    
-                    QL1("解析结果：\(JSON(json))")
-                    
-                    successCallback(JSON(json))
-                } catch {
-                    let moyaError = (error as! MoyaError)
-                    if isShowError {
-                        DSProgressHUD.show(.error(message: moyaError.myErrorDescription))
+                    if isCache {// 缓存到本地
+                        DSSaveFiles.save(path: target.path, data: response.data)
                     }
-                    failureCallback?(moyaError)
+                    
+                    #if DEBUG
+                        let json = try response.mapJSON()
+                        if let data = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted),
+                            let json = String.init(data: data, encoding: String.Encoding.utf8) {
+                            print("解析结果：\(json)")
+                        }
+//                        print("解析结果：\(JSON(response.data))")
+                    #endif
+                    successCallback(response)
+                    
+                } catch {
+                    if let moyaError = error as? MoyaError {
+                        if isShowError {
+                            DSProgressHUD.show(.error(message: moyaError.myErrorDescription))
+                        }
+                        failureCallback?(moyaError)
+                    } else {
+                        failureCallback?(MoyaError.underlying(error, response))
+                    }
                 }
                 
             case .failure(let error):
@@ -120,8 +143,10 @@ struct NetworkTool {
                 failureCallback?(error)
             }
         }
+        
     }
     
+    /// 取消所有的请求
     static func cancelAllRequest() {
         if #available(iOS 9.0, *) {
             moyaProvider.manager.session.getAllTasks { (tasks) in
@@ -171,9 +196,9 @@ extension ObservableType where E == Response {
         return flatMap({ (response) -> Observable<T> in
             do {
                 let response  = try response.filterSuccessfulStatusCodes()
-                let json = try response.mapJSON()
                 
                 #if DEBUG
+                    let json = try response.mapJSON()
                     if let data = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted),
                         let json = String.init(data: data, encoding: String.Encoding.utf8) {
                         print("解析结果：\(json)")

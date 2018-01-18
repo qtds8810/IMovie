@@ -49,8 +49,8 @@ class MineViewController: UIViewController {
 private extension MineViewController {
     private func setupUI() {
         view.backgroundColor = UIColor.orange
-        view.addSubview(tableView)
-        
-        viewModel.setupViewModel(with: tableView)
+//        view.addSubview(tableView)
+//
+//        viewModel.setupViewModel(with: tableView)
     }
 }

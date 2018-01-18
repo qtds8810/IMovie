@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31016ECB2010544500D788A0 /* DSSaveFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31016ECA2010544500D788A0 /* DSSaveFiles.swift */; };
 		31631BB720060E4C001161ED /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631BB620060E4C001161ED /* SearchViewModel.swift */; };
 		31631BBC20061059001161ED /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31631BBA20061059001161ED /* SearchTableViewCell.swift */; };
 		31631BBD20061059001161ED /* SearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31631BBB20061059001161ED /* SearchTableViewCell.xib */; };
@@ -53,6 +54,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		31016ECA2010544500D788A0 /* DSSaveFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSSaveFiles.swift; sourceTree = "<group>"; };
 		31631BB620060E4C001161ED /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		31631BBA20061059001161ED /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		31631BBB20061059001161ED /* SearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchTableViewCell.xib; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				31D7DAFB1FFE265B004BCEAB /* Helper.swift */,
 				31B0B2C51FFF0B6F00B2DA28 /* APIManager.swift */,
 				31D7DAF91FFE22D4004BCEAB /* NetworkTool.swift */,
+				31016ECA2010544500D788A0 /* DSSaveFiles.swift */,
 				316CC05E2006F6DA00784EFE /* DSRequestPlugin.swift */,
 				31B0B2C91FFF2CFF00B2DA28 /* ImageURLTool.swift */,
 			);
@@ -568,6 +571,7 @@
 				31D7DAD11FFDFD80004BCEAB /* MineViewController.swift in Sources */,
 				31D7DAF01FFE130C004BCEAB /* UIImage+Extension.swift in Sources */,
 				31B0B2CA1FFF2CFF00B2DA28 /* ImageURLTool.swift in Sources */,
+				31016ECB2010544500D788A0 /* DSSaveFiles.swift in Sources */,
 				31D2EAC1200DE7A800E8475B /* SearchModel.swift in Sources */,
 				31D7DAFA1FFE22D4004BCEAB /* NetworkTool.swift in Sources */,
 				31D7DAEC1FFE124A004BCEAB /* DSProgressHUD+Extension.swift in Sources */,
