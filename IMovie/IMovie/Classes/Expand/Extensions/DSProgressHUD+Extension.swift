@@ -15,12 +15,13 @@ enum DSHUDType {
     /// UIActivityIndicatorView
     case loading(message: String?)
     case info(icon: UIImage?, message: String?)
+    case warning(message: String?)
     /// Shows only labels.
     case onlyText(message: String?, isAutoHide: Bool)
 }
 
 class DSProgressHUD {
-    static let hudKeyWindow = UIApplication.shared.keyWindow!
+    static let hudKeyWindow = UIApplication.shared.keyWindow
     
     private init() {}
     
@@ -68,24 +69,28 @@ class DSProgressHUD {
         
     }
     
-    class func hide(view: UIView = hudKeyWindow) {
-        MBProgressHUD.hide(for: view, animated: true)
+    class func hide(view: UIView? = hudKeyWindow) {
+        if let v = view {
+            MBProgressHUD.hide(for: v, animated: true)
+        }
     }
     
-    class func show(_ type: DSHUDType, to view: UIView = hudKeyWindow) {
-        // "MBProgressHUD.bundle/success.png"
-        switch type {
-        case .success(let message):
-            show(.customView, message: message, icon: UIImage.init(named: "hud_success.png"), view: view)
-        case .error(let message):
-            show(.customView, message: message, icon: UIImage.init(named: "hud_error.png"), view: view)
-        case .loading(let message):
-            show(.indeterminate, message: message, icon: nil, view: view, isAutoHide: false)
-        case .info(let icon, let message):
-            show(.customView, message: message, icon: icon, view: view)
-        case .onlyText(let message, let isAutoHide):
-            show(.text, message: message, icon: nil, view: view, isUserEnable: true, isAutoHide: isAutoHide)
-            
+    class func show(_ type: DSHUDType, to view: UIView? = hudKeyWindow) {
+        if let view = view {
+            switch type {
+            case .success(let message):
+                show(.customView, message: message, icon: #imageLiteral(resourceName: "hud_success"), view: view)
+            case .error(let message):
+                show(.customView, message: message, icon: #imageLiteral(resourceName: "hud_error"), view: view)
+            case .loading(let message):
+                show(.indeterminate, message: message, icon: nil, view: view, isAutoHide: false)
+            case .info(let icon, let message):
+                show(.customView, message: message, icon: icon, view: view)
+            case .onlyText(let message, let isAutoHide):
+                show(.text, message: message, icon: nil, view: view, isUserEnable: true, isAutoHide: isAutoHide)
+            case .warning(let message):
+                show(.customView, message: message, icon: #imageLiteral(resourceName: "hud_warning"), view: view)
+            }
         }
     }
     
