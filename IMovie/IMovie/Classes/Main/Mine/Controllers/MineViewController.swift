@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import Moya
 
 class MineViewController: UIViewController {
     
@@ -41,6 +42,15 @@ class MineViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        let nsError = NSError(domain: "测试错误", code: 0, userInfo: [NSLocalizedDescriptionKey: "测试错误"])
+        
+        let moyaError = MoyaError.underlying(nsError as Error, Response.init(statusCode: 0, data: Data()))
+//        let moyaError = MoyaError.requestMapping("测试错误")
+        DSProgressHUD.show(DSHUDType.error(message: moyaError.myErrorDescription), to: view)
     }
     
 }

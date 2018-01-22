@@ -17,7 +17,7 @@ import SwiftyJSON
 private let requestTimeoutClosure = { (endpoint: Endpoint<APIManager>, done: @escaping MoyaProvider<APIManager>.RequestResultClosure) in
     do {
         var request = try endpoint.urlRequest()
-        request.timeoutInterval = 30
+        request.timeoutInterval = 60
 //        QL1("设置请求超时时间：30秒")
         done(.success(request))
     } catch {
@@ -41,7 +41,7 @@ struct NetworkTool {
     ///   - isCache: 是否缓存成功的数据（默认不缓存）
     ///   - type: 要转化成的 model
     ///   - keyPath: 需要往下解析的路径
-    static func request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+    static func ds_request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
         
         loadData(target, isShowError: isShowError, isCache: isCache, success: { (response) in
             do {
@@ -68,7 +68,7 @@ struct NetworkTool {
     ///   - target: 请求接口、参数
     ///   - isShowError: 是否预先处理错误提示（默认展示）
     ///   - isCache: 是否缓存成功的数据（默认不缓存）
-    static func request(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, success successCallback: @escaping (JSON) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+    static func ds_request(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, success successCallback: @escaping (JSON) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
         
         loadData(target, isShowError: isShowError, isCache: isCache, success: { (response) in
             do {

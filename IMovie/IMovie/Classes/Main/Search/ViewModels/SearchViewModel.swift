@@ -62,7 +62,7 @@ class SearchViewModel: NSObject {
             */
             
             if isNew { // 下拉刷新
-                NetworkTool.request(.getNewsList, type: SearchModel.self, success: { (model) in
+                NetworkTool.ds_request(.getNewsList, type: SearchModel.self, success: { (model) in
                     self.newsDate = model.date ?? ""
                     navigationItem.title = "今日要闻"
                     self.modelObservable.value = model.stories!
@@ -73,7 +73,7 @@ class SearchViewModel: NSObject {
                 }
                 
             } else { // 上拉加载更多
-                NetworkTool.request(.getMoreNews(self.newsDate), type: SearchModel.self, success: { (model) in
+                NetworkTool.ds_request(.getMoreNews(self.newsDate), type: SearchModel.self, success: { (model) in
                     self.newsDate = model.date ?? ""
                     navigationItem.title = self.dateStrToNewDateStr(old: model.date ?? "")//model.date
                     self.modelObservable.value += model.stories!
