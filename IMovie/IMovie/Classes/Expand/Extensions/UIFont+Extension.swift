@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum DSFontType {
+    case system
+    case bold
+}
+
 extension UIFont {
     class func ds_fontSizeOfpx(_ pxSize: CGFloat) -> UIFont {
         /**
@@ -21,7 +26,7 @@ extension UIFont {
         return font
     }
     
-    class func ds_fontSizeOfMine(_ size: CGFloat) -> UIFont {
+    class func ds_fontSizeOfdp(_ targer: DSFontType = DSFontType.system, size: CGFloat) -> UIFont {
         /**
          iPhone 4s: 320*480
          iPhone 5: 320.0-------------568.0

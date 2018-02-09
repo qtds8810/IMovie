@@ -77,17 +77,17 @@ struct kColor {
 // MARK: - 全局字号
 /// 全局字号
 struct kFontSize {
-    static let system_11 = UIFont.ds_fontSizeOfMine(11)
-    static let system_12 = UIFont.ds_fontSizeOfMine(12)
-    static let system_13 = UIFont.ds_fontSizeOfMine(13)
-    static let system_14 = UIFont.ds_fontSizeOfMine(14)
-    static let system_15 = UIFont.ds_fontSizeOfMine(15)
-    static let system_16 = UIFont.ds_fontSizeOfMine(16)
-    static let system_17 = UIFont.ds_fontSizeOfMine(17)
-    static let system_18 = UIFont.ds_fontSizeOfMine(18)
-    static let system_19 = UIFont.ds_fontSizeOfMine(19)
+    static let system_11 = UIFont.ds_fontSizeOfdp(.system, size: 11)
+    static let system_12 = UIFont.ds_fontSizeOfdp(.system, size: 12)
+    static let system_13 = UIFont.ds_fontSizeOfdp(.system, size: 13)
+    static let system_14 = UIFont.ds_fontSizeOfdp(.system, size: 14)
+    static let system_15 = UIFont.ds_fontSizeOfdp(.system, size: 15)
+    static let system_16 = UIFont.ds_fontSizeOfdp(.system, size: 16)
+    static let system_17 = UIFont.ds_fontSizeOfdp(.system, size: 17)
+    static let system_18 = UIFont.ds_fontSizeOfdp(.system, size: 18)
+    static let system_19 = UIFont.ds_fontSizeOfdp(.system, size: 19)
     
-    static let bold_18 = UIFont.boldSystemFont(ofSize: 18)
+    static let bold_18 = UIFont.ds_fontSizeOfdp(.bold, size: 18)
 }
 
 

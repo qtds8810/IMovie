@@ -81,7 +81,7 @@ class DSProgressHUD {
             case .success(let message):
                 show(.customView, message: message, icon: #imageLiteral(resourceName: "hud_success"), view: view)
             case .error(let message):
-                show(.customView, message: message, icon: #imageLiteral(resourceName: "hud_error"), view: view)
+                show(.customView, message: message, icon: #imageLiteral(resourceName: "hud_error"), view: view, isUserEnable: true)
             case .loading(let message):
                 show(.indeterminate, message: message, icon: nil, view: view, isAutoHide: false)
             case .info(let icon, let message):
