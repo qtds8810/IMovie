@@ -14,19 +14,41 @@ import SwiftyJSON
 
 
 /// 设置请求超时时间
-private let requestTimeoutClosure = { (endpoint: Endpoint<APIManager>, done: @escaping MoyaProvider<APIManager>.RequestResultClosure) in
+private let requestTimeoutClosure = { (endpoint: Endpoint, done: @escaping MoyaProvider<APIManager>.RequestResultClosure) in
     do {
         var request = try endpoint.urlRequest()
-        request.timeoutInterval = 60
-//        QL1("设置请求超时时间：30秒")
+        
+        if let path = request.url?.path,
+            path.contains("OrderFlow/handleOrder") ||
+                path.contains("OrderFlow/newBlocOrder") ||
+                path.contains("Order/uploadOilImage") ||
+                path.contains("Filling/orderAuthorization") ||
+                path.contains("DeliveryCode/createGalaxyOrder") {// 特殊接口请求超时设置长一些
+            request.timeoutInterval = 60
+        } else {
+            request.timeoutInterval = 40
+        }
+        
+        //        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        //        request.httpShouldHandleCookies = false
+        //        QL1("设置请求超时时间：30秒")
         done(.success(request))
+    } catch MoyaError.requestMapping(let url) {
+        done(.failure(MoyaError.requestMapping(url)))
+    } catch MoyaError.parameterEncoding(let error) {
+        done(.failure(MoyaError.parameterEncoding(error)))
     } catch {
-        QL1("不能设置请求超时时间，原因：\(error)")
+        done(.failure(MoyaError.underlying(error, nil)))
     }
     
 }
 
 struct NetworkTool {
+    
+    /// 失败别名
+    public typealias FailureCallback = (_ moyaError: MoyaError) -> Void
+    /// 成功 JSON 别名
+    public typealias SuccessJSON = (_ json: JSON) -> Void
     
     static let moyaProvider: MoyaProvider<APIManager> = MoyaProvider<APIManager>.init(requestClosure: requestTimeoutClosure, plugins: [kNetworkActivityPlugin])
     
@@ -41,9 +63,16 @@ struct NetworkTool {
     ///   - isCache: 是否缓存成功的数据（默认不缓存）
     ///   - type: 要转化成的 model
     ///   - keyPath: 需要往下解析的路径
-    static func ds_request<T: Decodable>(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, type: T.Type, atKeyPath keyPath: String? = nil, success successCallback: @escaping (T) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+    static func ds_request<T: Decodable>(_ target: APIManager,
+                                         isShowError: Bool = true,
+                                         isCache: Bool = false,
+                                         type: T.Type,
+                                         atKeyPath keyPath: String? = nil,
+                                         progress: ProgressBlock? = .none,
+                                         success successCallback: @escaping (T) -> Void,
+                                         failure failureCallback: FailureCallback? = nil) {
         
-        loadData(target, isShowError: isShowError, isCache: isCache, success: { (response) in
+        loadData(target, isShowError: isShowError, isCache: isCache, progress: progress, success: { (response) in
             do {
                 let t = try response.map(T.self, atKeyPath: keyPath)
                 successCallback(t)
@@ -68,9 +97,15 @@ struct NetworkTool {
     ///   - target: 请求接口、参数
     ///   - isShowError: 是否预先处理错误提示（默认展示）
     ///   - isCache: 是否缓存成功的数据（默认不缓存）
-    static func ds_request(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, success successCallback: @escaping (JSON) -> Void, failure failureCallback: ((MoyaError) -> Void)? = nil) {
+    static func ds_request(_ target: APIManager,
+                           isShowError: Bool = true,
+                           isCache: Bool = false,
+                           callbackQueue: DispatchQueue? = .none,
+                           progress: ProgressBlock? = .none,
+                           success successCallback: @escaping SuccessJSON,
+                           failure failureCallback: FailureCallback? = nil) {
         
-        loadData(target, isShowError: isShowError, isCache: isCache, success: { (response) in
+        loadData(target, isShowError: isShowError, isCache: isCache, callbackQueue: callbackQueue, progress: progress, success: { (response) in
             do {
                 let json = try response.mapJSON()
                 successCallback(JSON(json))
@@ -94,7 +129,13 @@ struct NetworkTool {
     ///   - target: 接口路径、参数
     ///   - isShowError: 是否展示请求错误的弹框（默认展示）
     ///   - isCache: 是否缓存到本地，（默认不缓存）
-    private static func loadData(_ target: APIManager, isShowError: Bool = true, isCache: Bool = false, success successCallback: @escaping (Response) -> Void, failure failureCallback: ((MoyaError) -> Void)?) {
+    private static func loadData(_ target: APIManager,
+                                 isShowError: Bool = true,
+                                 isCache: Bool = false,
+                                 callbackQueue: DispatchQueue? = .none,
+                                 progress: ProgressBlock? = .none,
+                                 success successCallback: @escaping (Response) -> Void,
+                                 failure failureCallback: FailureCallback?) {
         
         QL1("\n请求方法：\(target.method)\n请求链接：\(target.baseURL.debugDescription + target.path)\n请求头：\(target.headers ?? [:])\n请求参数：\(target.parameters ?? [:])")
         
@@ -105,24 +146,25 @@ struct NetworkTool {
             return
         }
         
-        moyaProvider.request(target) { (result) in
+        moyaProvider.request(target, callbackQueue: callbackQueue, progress: progress) { (result) in
             switch result {
             case .success(let response):
                 
                 do {
                     let response  = try response.filterSuccessfulStatusCodes()
+                    
                     if isCache {// 缓存到本地
                         DSSaveFiles.save(path: target.path, data: response.data)
                     }
                     
                     #if DEBUG
-                        let json = try response.mapJSON()
-                        if let data = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted),
-                            let json = String.init(data: data, encoding: String.Encoding.utf8) {
-                            print("解析结果：\(json)")
-                        }
-//                        print("解析结果：\(JSON(response.data))")
+                    let json = try response.mapJSON()
+                    if let data = try? JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted),
+                        let json = String.init(data: data, encoding: String.Encoding.utf8) {
+                        print("解析结果：\(json)")
+                    }
                     #endif
+                    
                     successCallback(response)
                     
                 } catch {
@@ -178,8 +220,8 @@ extension MoyaError {
             return "无法将数据映射到可解码的对象。"//"Failed to map data to a Decodable object."
         case .encodableMapping:
             return "未能将可编码的对象编码为数据。"//"Failed to encode Encodable object into data."
-        case .statusCode:
-            return "状态代码不在给定范围内。"//"Status code didn't fall within the given range."
+        case .statusCode(let response):
+            return "状态代码不在给定范围内。(\(response.statusCode))"//"Status code didn't fall within the given range."
         case .requestMapping:
             return "未能将端点映射到URLRequest。"//"Failed to map Endpoint to a URLRequest."
         case .parameterEncoding(let error):

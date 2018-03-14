@@ -11,7 +11,7 @@ import UIKit
 // MARK: - 自定义打印信息
 func QL1<T>(_ debug: T, _ file: String = #file, _ function: String = #function, _ line: Int = #line) {
     #if DEBUG
-        print("\((file as NSString).pathComponents.last!):\(line) \(function): \(debug)")
+        print("\((file as NSString).lastPathComponent):\(line) \(function): \(debug)")
     #endif
 }
 
